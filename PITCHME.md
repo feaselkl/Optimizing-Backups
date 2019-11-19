@@ -184,15 +184,13 @@ That will depend on your hardware, workload, and other factors specific to your 
 
 ### The Power of Sampling
 
-Suppose we looked at the following settings:
-
 * Block Size: { 0.5kb, 1kb, 2kb, 4kb, 8kb, 16kb, 32kb, 64kb }
 * Max Transfer Size: { 64kb, 128kb, 256kb, 512kb, 1mb, 2mb, 4mb }
 * Buffer Count: { 7, 15, 30, 60, 128, 256, 512, 1024 }
 * File Count: { 1, 2, 4, 6, 8, 10, 12 }
 * Compression: { TRUE }
 
-That gives us 8 * 7 * 8 * 7, or 3136 separate options.  At 10 minutes per backup, that's 31,360 minutes or ~22 days staright of backups.
+That gives us 3136 separate options.  At 10 minutes per backup, that's 31,360 minutes or ~22 days staright of backups.
 
 ---?image=presentation/assets/background/microscope2.jpg&size=cover&opacity=20
 
