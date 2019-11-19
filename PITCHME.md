@@ -76,14 +76,12 @@ If you have a fixed amount of time to take backups, you might run into trouble a
 
 ### What Can We Do?
 
-We have a few options for reducing backup times.
-
-* Use read-only filegroups and back those up separately.
-* Use newer editions of SQL Server.  2017 made things faster.
+* Use read-only filegroups.
+* Use newer editions of SQL Server like 2017.
 * Remove obsolete tables.
 * Use data compression, columnstore indexes, etc. to reduce data size.
-* Use multiple filegroups and split data across the filegroups.
-* Use differential backups between full backups; run full backups less often.
+* Split data across multiple filegroups.
+* Use differential backups between full backups.
 * Configure backup settings.  We'll do this!
 
 ---
