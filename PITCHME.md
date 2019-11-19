@@ -288,7 +288,7 @@ We can combine DBATools with simple PowerShell to perform sampling of these sett
 6. Genetic Algorithms
 7. **What's Next?**
 
----?image=presentation/assets/background/sinkhole.jpg&size=cover&opacity=20
+---?image=presentation/assets/background/construction.jpg&size=cover&opacity=20
 
 ### What's Next?
 
