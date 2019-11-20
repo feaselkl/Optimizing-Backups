@@ -58,11 +58,8 @@ This will help us back up (and potentially restore) databases faster than the de
 
 1. **Describing the Problem**
 2. The Settings
-3. Random Forest
-4. Linear Regression
-5. Training and Testing
-6. Genetic Algorithms
-7. What's Next?
+3. Analysis
+4. What's Next?
 
 ---?image=presentation/assets/background/problem.jpg&size=cover&opacity=20
 
@@ -92,11 +89,8 @@ If you have a fixed amount of time to take backups, you might run into trouble a
 
 1. Describing the Problem
 2. **The Settings**
-3. Random Forest
-4. Linear Regression
-5. Training and Testing
-6. Genetic Algorithms
-7. What's Next?
+3. Analysis
+4. What's Next?
 
 ---
 
@@ -204,71 +198,14 @@ We can combine DBATools with simple PowerShell to perform sampling of these sett
 
 ---
 
-@title[Random Forest]
+@title[Analysis]
 
 ## Agenda
 
 1. Describing the Problem
 2. The Settings
-3. **Random Forest**
-4. Linear Regression
-5. Training and Testing
-6. Genetic Algorithms
-7. What's Next?
-
----?image=presentation/assets/background/demo.jpg&size=cover&opacity=20
-
-### Demo Time
-
----
-
-@title[Linear Regression]
-
-## Agenda
-
-1. Describing the Problem
-2. The Settings
-3. Random Forest
-4. **Linear Regression**
-5. Training and Testing
-6. Genetic Algorithms
-7. What's Next?
-
----?image=presentation/assets/background/demo.jpg&size=cover&opacity=20
-
-### Demo Time
-
----
-
-@title[Training and Testing]
-
-## Agenda
-
-1. Describing the Problem
-2. The Settings
-3. Random Forest
-4. Linear Regression
-5. **Training and Testing**
-6. Genetic Algorithms
-7. What's Next?
-
----?image=presentation/assets/background/demo.jpg&size=cover&opacity=20
-
-### Demo Time
-
----
-
-@title[Genetic Algorithms]
-
-## Agenda
-
-1. Describing the Problem
-2. The Settings
-3. Random Forest
-4. Linear Regression
-5. Training and Testing
-6. **Genetic Algorithms**
-7. What's Next?
+3. **Analysis**
+4. What's Next?
 
 ---?image=presentation/assets/background/demo.jpg&size=cover&opacity=20
 
@@ -282,11 +219,8 @@ We can combine DBATools with simple PowerShell to perform sampling of these sett
 
 1. Describing the Problem
 2. The Settings
-3. Random Forest
-4. Linear Regression
-5. Training and Testing
-6. Genetic Algorithms
-7. **What's Next?**
+3. Analysis
+4. **What's Next?**
 
 ---?image=presentation/assets/background/construction.jpg&size=cover&opacity=20
 
