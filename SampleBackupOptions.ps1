@@ -28,7 +28,7 @@ foreach ($entry in CartesianProduct @{ BlockSize = (0.5kb, 1kb, 2kb, 4kb, 8kb, 1
   $rand = Get-Random -Maximum 100
   # We are making a fair assumption that Get-Random is a uniformly distributed pseudo-random number generator.  Setting -Maximum 100 means we'll get a range from 0-99.
   if ($rand -gt 96) {
-    $outcome = Backup-DbaDatabase -SqlInstance ($InstanceName) -BackupDirectory C:\temp\BackupFiles -Database ($DatabaseName) -Type Full -CopyOnly -CompressBackup -BufferCount ($entry.BufferCount) -FileCount ($entry.FileCount)
+    $outcome = Backup-DbaDatabase -SqlInstance ($InstanceName) -BackupDirectory C:\temp\BackupFiles -Database ($DatabaseName) -Type Full -CopyOnly -CompressBackup -BufferCount ($entry.BufferCount) -FileCount ($entry.FileCount) -MaxTransferSize ($entry.MaxTransferSize) -BlockSize ($entry.BlockSize)
   "$($entry.BlockSize),$($entry.Buffercount),$($entry.MaxTransferSize),$($entry.FileCount),$($outcome.Duration.TotalSeconds)" >> C:\Temp\PerfTest.txt
     Remove-Item C:\Temp\BackupFiles\*
   }
