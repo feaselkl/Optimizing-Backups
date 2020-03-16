@@ -207,6 +207,34 @@ We can combine DBATools with simple PowerShell to perform sampling of these sett
 3. **Analysis**
 4. What's Next?
 
+---
+
+### Techniques
+
+We want to solve a **regression** problem:  we have data with actual values and want to build a model which predicts based on inputs.  Examples of regression models include:
+
+# Linear Regression
+# Random forests and decision trees
+# Neural network regression
+
+---
+
+### Linear Regression
+
+![An example of linear regression](presentation/assets/image/LinearRegression.png)
+
+---
+
+### Decision Trees
+
+![An example of a decision tree](presentation/assets/image/DecisionTree.png)
+
+---
+
+### Random Forest
+
+![A dramatization of random forests.](presentation/assets/image/RandomForest.png)
+
 ---?image=presentation/assets/background/demo.jpg&size=cover&opacity=20
 
 ### Demo Time
