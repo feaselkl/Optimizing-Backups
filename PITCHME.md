@@ -213,9 +213,9 @@ We can combine DBATools with simple PowerShell to perform sampling of these sett
 
 We want to solve a **regression** problem:  we have data with actual values and want to build a model which predicts based on inputs.  Examples of regression models include:
 
-# Linear Regression
-# Random forests and decision trees
-# Neural network regression
+* Linear Regression
+* Random forests and decision trees
+* Neural network regression
 
 ---
 
