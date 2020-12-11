@@ -1,0 +1,395 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Catallaxy Services | Optimizing Backup Performance using Data Science Techniques</title>
+
+		<link rel="stylesheet" href="../reveal.js/dist/reset.css">
+		<link rel="stylesheet" href="../reveal.js/dist/reveal.css">
+		<link rel="stylesheet" href="../reveal.js/dist/theme/black.css" id="theme">
+		<link rel="stylesheet" href="../WebsiteAssets/mods.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="../reveal.js/plugin/highlight/monokai.css" id="highlight-theme">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h2>Optimizing Backup Performance</h2>
+					<h2>Using Data Science Techniques</h2>
+					
+					<a href="https://www.catallaxyservices.com">Kevin Feasel</a> (<a href="https://twitter.com/feaselkl">@feaselkl</a>)<br />
+					<a href="https://csmore.info/on/backups">https://CSmore.info/on/backups</a>
+				</section>
+				
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Who Am I?  What Am I Doing Here?</h3>
+					<div class="container">
+						<div class="col">
+							<table class="whoami">
+								<tr>
+									<td><a href="https://csmore.info"><img src="../WebsiteAssets/Logo.png" height="100" /></a></td>
+									<td nowrap><a href="https://csmore.info">Catallaxy Services</a></td>
+								</tr>
+								<tr>
+									<td><a href="https://curatedsql.com"><img src="../WebsiteAssets/CuratedSQLLogo.png" height="100" /></a></td>
+									<td nowrap><a href="https://curatedsql.com">Curated SQL</a></td>
+								</tr>
+								<tr>
+									<td><a href="https://www.apress.com/us/book/9781484254608"><img src="../WebsiteAssets/PolyBaseRevealed.png" height="120" /></a></td>
+									<td nowrap><a href="https://www.apress.com/us/book/9781484254608">PolyBase Revealed</a></td>
+								</tr>
+							</table>
+						</div>
+						<div class="col">
+							<a href="http://www.twitter.com/feaselkl"><img src="../WebsiteAssets/HeadShot.jpg" height="358" width="315" /></a>
+							<br />
+							<a href="http://www.twitter.com/feaselkl">@feaselkl</a>
+						</div>					
+					</div>
+				</section>
+				
+				<section data-background-image="presentation/assets/background/window.jpg" data-background-opacity="0.4">
+					<h3>How Big is Your Backup Window?</h3>
+					
+					<p>How much time do you have to perform full backups?  Do you (or someone you know) want to reduce that window?</p>
+				</section>
+				
+				<section data-background-image="presentation/assets/background/motivation.jpg" data-background-opacity="0.4">
+					<h3>Motivation</h3>
+					
+					<p>We will use data science techniques to minimize the amount of time it takes to back up our existing databases.</p>
+					<p>This will help us back up (and potentially restore) databases faster than the defaults would allow.</p>
+				</section>
+				
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Agenda</h3>
+					
+					<ol>
+						<li class="active">Describing the Problem</li>
+						<li>The Settings</li>
+						<li>Analysis</li>
+						<li>What's Next?</li>
+					</ol>
+				</section>
+				
+				<section data-background-image="presentation/assets/background/problem.jpg" data-background-opacity="0.2">
+					<h3>Describing the Problem</h3>
+					
+					<p>Backups (and restores) are critical for database administrators, but it can take a lot of time to back up a large database.</p>
+					<p>If you have a fixed amount of time to take backups, you might run into trouble as your databases grow.</p>
+				</section>
+				
+				<section data-background-image="presentation/assets/background/questions.jpg" data-background-opacity="0.2">
+					<h3>What Can We Do?</h3>
+					
+					<ul>
+						<li class="fragment fade-in-them-semi-out">Use read-only filegroups.</li>
+						<li class="fragment fade-in-them-semi-out">Use newer editions of SQL Server like 2017.</li>
+						<li class="fragment fade-in-them-semi-out">Remove obsolete tables.</li>
+						<li class="fragment fade-in-them-semi-out">Use data compression, columnstore indexes, etc. to reduce data size.</li>
+						<li class="fragment fade-in-them-semi-out">Split data across multiple filegroups.</li>
+						<li class="fragment fade-in-them-semi-out">Use differential backups between full backups.</li>
+						<li class="fragment fade-in"><span class="fragment highlight-red">Configure backup settings.</span></li>
+					</ul>
+				</section>
+				
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Agenda</h3>
+					
+					<ol>
+						<li>Describing the Problem</li>
+						<li class="active">The Settings</li>
+						<li>Analysis</li>
+						<li>What's Next?</li>
+					</ol>
+				</section>
+				
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Backing Up a Database</h3>
+					
+					<p>The simplest settings:</p>
+					
+					<pre><code data-trim data-noescape><script type="text/template">
+					BACKUP DATABASE [Scratch]
+					TO DISK = N'H:\Backups\Scratch.bak'
+					WITH NOFORMAT, INIT
+					</script></code></pre>
+				</section>
+				
+				<section data-background-image="presentation/assets/background/blocks.jpg" data-background-opacity="0.2">
+					<h3>Block Size</h3>
+					
+					<div class="container">
+						<div class="col">
+							<h4>Description</h4>
+							<p>The physical block size.</p>
+						</div>
+						<div class="col">
+							<h4>Valid values</h4>
+							<p><code>{ 0.5kb, 1kb, 2kb, 4kb, 8kb, 16kb, 32kb, 64kb }</code></p>
+						</div>
+						<div class="col">
+							<h4>Advice</h4>
+							<p>This really only matters for backup tapes and CD-ROMs but it is still settable.</p>
+						</div>
+					</div>
+				</section>
+				
+				<section data-background-image="presentation/assets/background/trains.jpg" data-background-opacity="0.2">
+					<h3>Max Transfer Size</h3>
+					
+					<div class="container">
+						<div class="col">
+							<h4>Description</h4>
+							<p>Maximum amount of data to be transferred per operation.</p>
+							<p><span class="fragment fade-in" data-fragment-index="1">My working metaphor for this is a <strong>bucket</strong>.</span></p>
+						</div>
+						<div class="col">
+							<img src="presentation/assets/image/Bucket.jpg" height="400" class="fragment fade-in" data-fragment-index="1" />
+						</div>
+						<div class="col">
+							<h4>Valid values</h4>
+							<p><code>{ 64kb, 128kb, 256kb, 512kb, 1mb, 2mb, 4mb }</code></p>
+						</div>
+					</div>
+				</section>
+				
+				<section data-background-image="presentation/assets/background/trains.jpg" data-background-opacity="0.2">
+					<h3>Buffer Count</h3>
+					
+					<div class="container">
+						<div class="col">
+							<h4>Description</h4>
+							<p>Number of buckets of size <code>MaxTransferSize</code> to be created.  In other words, the <strong>number of buckets</strong>.</p>
+						</div>
+						<div class="col">
+							<h4>Valid values</h4>
+							<p><code>{ 1:N }</code></p>
+						</div>
+						<div class="col">
+							<h4>Advice</h4>
+							<p>Try to stay at or below 1024.</p>
+							<p>With 1024 buffers * 4 MB Max Transfer Size, that's 4 GB of memory used for a single backup.</p>
+						</div>
+					</div>
+				</section>
+				
+				<section data-background-image="presentation/assets/background/trains.jpg" data-background-opacity="0.2">
+					<h3>File Count</h3>
+					
+					<div class="container">
+						<div class="col">
+							<h4>Description</h4>
+							<p>Tell SQL Server to stripe your backup across multiple files.</p>
+							<p>This is a nice way of getting extra throughput out of your backups.</p>
+						</div>
+						<div class="col">
+							<h4>Valid values</h4>
+							<p><code>{ 1:N }</code></p>
+						</div>
+						<div class="col">
+							<h4>Advice</h4>
+							<p>Aim for 1-12 per drive for direct attached storage, and 1-12 total for a SAN.</p>
+						</div>
+					</div>
+				</section>
+				
+				<section data-background-image="presentation/assets/background/trains.jpg" data-background-opacity="0.2">
+					<h3>Compression</h3>
+					
+					<div class="container">
+						<div class="col">
+							<h4>Description</h4>
+							<p>Tell SQL Server whether or not you want to compress your backup.</p>
+						</div>
+						<div class="col">
+							<h4>Valid values</h4>
+							<p><code>{ TRUE, FALSE }</code></p>
+						</div>
+						<div class="col">
+							<h4>Advice</h4>
+							<p>This has a very minor cost of CPU but typically leads to much smaller backups, so my default is to say yes.</p>
+						</div>
+					</div>
+				</section>
+				
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Coming up with New Settings</h3>
+					
+					<pre><code data-line-numbers="1-8|2-3|5|6|7|8|1-8" data-trim><script type="text/template">
+					BACKUP DATABASE [Scratch]
+						TO DISK = N'H:\Backup\Scratch1.bak',
+						DISK = N'H:\Backup\Scratch2.bak'
+					WITH NOFORMAT, INIT,
+						MAXTRANSFERSIZE = 2097152,
+						BUFFERCOUNT = 50,
+						BLOCKSIZE = 8192,
+						COMPRESSION
+					</script></code></pre>
+				</section>
+				
+				<section data-background-image="presentation/assets/background/questions.jpg" data-background-opacity="0.2">
+					<h3>What Should we Do?</h3>
+					
+					<p>Although we <strong>can</strong> change each of these settings, there are quite a few values.  Which ones should we choose?</p>
+
+					<p>That will depend on your hardware, workload, and other factors specific to your environment, so we won't come up with numbers which apply everywhere.</p>
+
+					<p>But what we <strong>can</strong> do is give you the tools necessary to determine what good settings look like in your environment.</p>
+				</section>
+				
+				<section data-background-image="presentation/assets/background/white-wall.jpg" data-background-opacity="0.2">
+					<h3>The Power of Sampling</h3>
+					
+					<ul>
+						<li>Block Size: { 0.5kb, 1kb, 2kb, 4kb, 8kb, 16kb, 32kb, 64kb }</li>
+						<li>Max Transfer Size: { 64kb, 128kb, 256kb, 512kb, 1mb, 2mb, 4mb }</li>
+						<li>Buffer Count: { 7, 15, 30, 60, 128, 256, 512, 1024 }</li>
+						<li>File Count: { 1, 2, 4, 6, 8, 10, 12 }</li>
+						<li>Compression: { TRUE }</li>
+					</ul>
+
+					<p>That gives us 3136 separate options.  At 10 minutes per backup, that's 31,360 minutes or ~22 days straight of backups.</p>
+				</section>
+				
+				<section data-background-image="presentation/assets/background/microscope2.jpg" data-background-opacity="0.2">
+					<h3>Sampling with PowerShell</h3>
+					
+					<p>We can combine DBATools with simple PowerShell to perform sampling of these settings for our databases.  That way, we perform a tiny fraction of the total amount of work, but still generate enough results that we can speculate on how the full set would look.</p>
+				</section>
+				
+				<section data-background-image="presentation/assets/background/demo.jpg" data-background-opacity="0.2">
+					<h3>Demo Time</h3>
+				</section>
+				
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Agenda</h3>
+					
+					<ol>
+						<li>Describing the Problem</li>
+						<li>The Settings</li>
+						<li class="active">Analysis</li>
+						<li>What's Next?</li>
+					</ol>
+				</section>
+				
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Techniques</h3>
+					
+					<p>We want to solve a <strong>regression</strong> problem:  we have data with actual values and want to build a model which predicts based on inputs.  Examples of regression models include:</p>
+					
+					<ul>
+						<li>Linear regression</li>
+						<li>Random forests and decision trees</li>
+						<li>Neural network regression</li>
+					</ul>
+				</section>
+				
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Linear Regression</h3>
+					
+					<img src="presentation/assets/image/LinearRegression.png" />
+				</section>
+				
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Decision Trees</h3>
+					
+					<img src="presentation/assets/image/DecisionTree.png" />
+				</section>
+				
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Random Forest</h3>
+					
+					<img src="presentation/assets/image/RandomForest.png" />
+				</section>
+				
+				<section data-background-image="presentation/assets/background/demo.jpg" data-background-opacity="0.2">
+					<h3>Demo Time</h3>
+				</section>
+				
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Agenda</h3>
+					
+					<ol>
+						<li>Describing the Problem</li>
+						<li>The Settings</li>
+						<li>Analysis</li>
+						<li class="active">What's Next?</li>
+					</ol>
+				</section>
+				
+				<section data-background-image="presentation/assets/background/engineering.jpg" data-background-opacity="0.4">
+					<h3>What's Next?</h3>
+					
+					<p>Next steps:</p>
+					
+					<ul>
+						<li>Reverse the process:  output parameters which maximize performance</li>
+						<li>Deploy the model somewhere useful -- maybe using SQL Server ML Services</li>
+						<li>Test results and eventually retrain your model</li>
+					</ul>
+				</section>
+				
+				<section data-background-image="presentation/assets/background/wrappingup.jpg" data-background-opacity="0.2">
+					<h3>Wrapping Up</h3>
+					
+					<p>Over the course of today's talk, we have covered one data science scenario, optimizing backups.  We tried several algorithms and approaches to solving this problem and saw how they compare.</p>
+				</section>
+				
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Wrapping Up</h3>
+					
+					<p>
+						To learn more, go here:
+						<br />
+						<a href="https://csmore.info/on/backups">https://CSmore.info/on/backups</a>
+					</p>
+					<br />
+					<p>
+						And for help, contact me:
+						<br />
+						<a href="mailto:feasel@catallaxyservices.com">feasel@catallaxyservices.com</a> | <a href="https://www.twitter.com/feaselkl">@feaselkl</a>
+					</p>
+					<br />
+					<p>
+						Catallaxy Services consulting:
+						<br />
+						<a href="https://csmore.info/contact">https://CSmore.info/on/contact</a>
+					</p>
+				</section>
+			</div>
+		</div>
+
+		<script src="../reveal.js/dist/reveal.js"></script>
+		<script src="../reveal.js/plugin/zoom/zoom.js"></script>
+		<script src="../reveal.js/plugin/notes/notes.js"></script>
+		<script src="../reveal.js/plugin/search/search.js"></script>
+		<script src="../reveal.js/plugin/markdown/markdown.js"></script>
+		<script src="../reveal.js/plugin/math/math.js"></script>
+		<script src="../reveal.js/plugin/menu/menu.js"></script>
+		<script src="../reveal.js/plugin/highlight/highlight.js"></script>
+		<script src="../reveal.js/plugin/chart/Chart.min.js"></script>
+		<script src="../reveal.js/plugin/chart/plugin.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				width: '70%',
+				controls: true,
+				progress: true,
+				center: true,
+				hash: true,
+				transition: 'fade',
+				
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight, RevealMath, RevealMenu, RevealChart ]
+			});
+		</script>
+	</body>
+</html>
